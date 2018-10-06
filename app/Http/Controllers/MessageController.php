@@ -17,31 +17,30 @@ class MessageController extends Controller
     return view('messages.index');
   }
 
-  public function create(){
-    
+  public function show(Chatroom $chatroom){
+    return view('messages.show', ["sender_id"=>Auth::id(), "receiver_id"=>$chatroom->id, "chatroom_id"=>$chatroom->id]);
   }
 
   public function getConversation(Chatroom $chatroom){
     $messages = $chatroom->messages;
     return MessagesResource::collection($messages);
   }
-  
+
   public function store(Request $request){
     $message = new Message([
       'body' => $request->body,
-      'chatroom_id' => Chatroom::findOrfail( $request->chatroom_id )->id,
+      'chatroom_id' => $request->chatroom_id,
       'sender' => Auth::id(),
-      'receiver' => User::findOrfail($request->receiver)->id
+      'receiver' => $request->receiver
     ]);
-    
-    $message = new MessagesResource($message);
-    
+
     if( $message->save() ){
-      event( new CreatedMessage($message) );
+      event( new CreatedMessage( $message ) );
+      return $message;
     }
   }
 
   public function destroy(Message $message){
-    
+
   }
 }

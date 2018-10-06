@@ -18,5 +18,50 @@ window.Vue = require('vue');
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 
 const app = new Vue({
-    el: '#app'
-});
+  el : "#app",
+  data : {
+    senderId : null,
+    receiverId : null,
+    chatroomId : null,
+    message : {},
+    messages : []
+  },
+  methods : {
+    sendMessage : function(){
+      if( this.message.body ){
+        this.message.sender = this.senderId;
+        this.message.receiver = this.receiverId;
+        this.message.chatroom_id = this.chatroomId;
+        axios.post("http://localhost/Chater/public/messages", this.message).then( (response)=>{
+          this.messages.push( this.message );
+          this.message = {};
+          console.log(response);
+        });
+        console.log(this.message);
+      }
+    }
+  },
+  beforeMount(){
+    this.senderId = document.querySelector('meta[name="sender-id"]').content;
+    this.receiverId = document.querySelector('meta[name="receiver-id"]').content;
+    this.chatroomId = document.querySelector('meta[name="chatroom-id"]').content;
+    console.log("application about to be mounted");
+  },
+  mounted(){
+    axios.get("http://localhost/Chater/public/messages/getMessages/" + this.receiverId).then( (response)=>{
+      this.messages = response.data.data;
+      console.log( "http://localhost/Chater/public/messages/getMessages/" + this.receiverId );
+      console.log( response );
+    });
+
+    Echo.channel("chatroom."+this.chatroomId).listen(
+      "CreatedMessage", (e)=>{
+        console.log(e);
+        console.log("Pueoecucha");
+      }
+    );
+
+    console.log("application mounted");
+  }
+  }
+);

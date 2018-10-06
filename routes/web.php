@@ -18,7 +18,8 @@ Route::get('/', function(){
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('messages/{chatroom}', 'MessageController@getConversation');
+Route::get('messages/{chatroom}', 'MessageController@show');
+Route::get('messages/getMessages/{chatroom}', 'MessageController@getConversation');
 
 Route::resources([
   'messages' => 'MessageController',
