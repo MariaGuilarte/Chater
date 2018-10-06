@@ -7,11 +7,13 @@ class ChatroomsTableSeeder extends Seeder
 {
     public function run(){
       Chatroom::create([
-        "id" => 1
+        "user_1" => 1,
+        "user_2" => 2
       ]);
       
       Chatroom::create([
-        "id" => 2
+        "user_1" => 3,
+        "user_2" => 4
       ]);
     }
 }

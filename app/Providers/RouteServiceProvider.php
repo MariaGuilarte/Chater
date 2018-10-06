@@ -2,53 +2,43 @@
 
 namespace App\Providers;
 
+use App\Chatroom;
+use App\User;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    /**
-     * This namespace is applied to your controller routes.
-     *
-     * In addition, it is set as the URL generator's root namespace.
-     *
-     * @var string
-     */
     protected $namespace = 'App\Http\Controllers';
 
-    /**
-     * Define your route model bindings, pattern filters, etc.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        //
-
-        parent::boot();
+    public function boot(){
+      
+      parent::boot();
+      
+      Route::bind('chatroom', function($value){
+        $user = User::findOrFail($value);
+        $uid = Auth::id();
+        
+        return Chatroom::where([
+          'user_1' => $uid,
+          'user_2' => $user->id
+        ])->orWhere([
+          'user_2' => $uid,
+          'user_1' => $user->id
+        ])->first();
+        
+      });
     }
 
-    /**
-     * Define the routes for the application.
-     *
-     * @return void
-     */
     public function map()
     {
         $this->mapApiRoutes();
 
         $this->mapWebRoutes();
 
-        //
     }
 
-    /**
-     * Define the "web" routes for the application.
-     *
-     * These routes all receive session state, CSRF protection, etc.
-     *
-     * @return void
-     */
     protected function mapWebRoutes()
     {
         Route::middleware('web')
