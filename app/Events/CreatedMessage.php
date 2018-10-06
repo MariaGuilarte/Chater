@@ -11,7 +11,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use App\Message;
 
-class CreatedMessage
+class CreatedMessage implements ShouldBroadcast
 {
   use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -22,6 +22,6 @@ class CreatedMessage
   }
 
   public function broadcastOn(){
-    return new Channel('chatroom.' . $this->message->chatroom_id);
+    return new PrivateChannel('chatroom.' . $this->message->chatroom_id );
   }
 }

@@ -10,7 +10,7 @@
       <div class="card-body">
         <div class="message-box">
           <span class="message"
-                :class="{ right: m.sender_id == senderId }"
+                :class="{ right: m.sender == senderId }"
                 v-for="m in messages">
           @{{ m.body }}
           </span>

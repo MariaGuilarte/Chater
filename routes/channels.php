@@ -16,5 +16,8 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('chatroom.{id}', function ($user, $id){
-  return true;
+  $chatroom = App\Chatroom::where("user_1", $user->id)->orWhere("user_2", $user->id)->get();
+  if( $chatroom ){
+    return true;
+  }
 });

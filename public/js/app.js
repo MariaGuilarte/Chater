@@ -13924,9 +13924,7 @@ var app = new Vue({
         axios.post("http://localhost/Chater/public/messages", this.message).then(function (response) {
           _this.messages.push(_this.message);
           _this.message = {};
-          console.log(response);
         });
-        console.log(this.message);
       }
     }
   },
@@ -13934,23 +13932,17 @@ var app = new Vue({
     this.senderId = document.querySelector('meta[name="sender-id"]').content;
     this.receiverId = document.querySelector('meta[name="receiver-id"]').content;
     this.chatroomId = document.querySelector('meta[name="chatroom-id"]').content;
-    console.log("application about to be mounted");
   },
   mounted: function mounted() {
     var _this2 = this;
 
     axios.get("http://localhost/Chater/public/messages/getMessages/" + this.receiverId).then(function (response) {
       _this2.messages = response.data.data;
-      console.log("http://localhost/Chater/public/messages/getMessages/" + _this2.receiverId);
-      console.log(response);
     });
 
-    Echo.channel("chatroom." + this.chatroomId).listen("CreatedMessage", function (e) {
-      console.log(e);
-      console.log("Pueoecucha");
+    Echo.private("chatroom." + this.chatroomId).listen("CreatedMessage", function (e) {
+      _this2.messages.push(e.message);
     });
-
-    console.log("application mounted");
   }
 });
 
