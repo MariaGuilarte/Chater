@@ -14,8 +14,7 @@ class MessagesResource extends JsonResource
         'chatroom_id' => $this->chatroom_id,
         'sender' => $this->sender,
         'receiver' => $this->receiver,
-        'created_at' => $this->created_at,
-        'updated_at' => $this->updated_at
+        'created_at' => $this->created_at
       ];
       // return parent::toArray($request);
     }
